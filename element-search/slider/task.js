@@ -1,63 +1,37 @@
-let buttons = document.querySelectorAll('.slider__arrow');
-slides = Array.from(document.querySelectorAll('.slider__item'))
-slidesCount = slides.length
-let dots = document.querySelectorAll('.slider__dot');
+const sliderItem = Array.from(document.getElementsByClassName('slider__item'));
+const sliderPrev = document.querySelector(".slider__arrow_prev");
+const sliderNext = document.querySelector(".slider__arrow_next");
 
-function showSlides(direction) {
-    
-    activeIndex = slides.findIndex((elem) => {
-      if (elem.classList.contains('slider__item_active') == true) {
-        return true
-      }
-    });
-    console.log(activeIndex);
-    let nextIndex
-    if (direction == 1) {
-      if (activeIndex == slidesCount - 1) {
-        nextIndex = 0;
-        } else {
-          nextIndex = activeIndex + 1;
-        }
-        
-    } else {
-      if (activeIndex == 0) {
-        nextIndex = slidesCount - 1;
-        } else {
-          nextIndex = activeIndex - 1;
-        } 
-    }
-      slides[activeIndex].classList.remove('slider__item_active');
-      slides[nextIndex].classList.add('slider__item_active');
-      dots[activeIndex].classList.remove('slider__dot_active');
-      dots[nextIndex].classList.add('slider__dot_active');
-      console.log(nextIndex);
-    }
+const dots = Array.from(document.getElementsByClassName('slider__dot'));
 
-      buttons.forEach((elem, index) => {
-        elem.addEventListener('click', () => {
-          showSlides(index)   
-    })
-})
+function changeSlider(index) {
+    const indexActiveSlider = sliderItem.findIndex(slider => slider.classList.contains('slider__item_active'));
+    sliderItem[indexActiveSlider].classList.remove('slider__item_active');
+    dots[indexActiveSlider].classList.remove('slider__dot_active');
 
-dots.forEach((elem, index) => {
-  elem.addEventListener('click', () => {
-    showDot(index)   
-    })
-})
-
-function showDot(index) {
-  slides.forEach((elem, i) => {
-    if (index == i) {
-      elem.classList.add('slider__item_active'); 
-      } else {
-        elem.classList.remove('slider__item_active');
-      }
-    })
-    dots.forEach((elem, i) => {
-      if (index == i) {
-        elem.classList.add('slider__dot_active'); 
-        } else {
-          elem.classList.remove('slider__dot_active');
-        }
-    })
+    sliderItem[index].classList.add('slider__item_active');
+    dots[index].classList.add('slider__dot_active');
 }
+
+document.addEventListener('wheel', (event) => {
+    const indexActiveSlider = sliderItem.findIndex(slider => slider.classList.contains('slider__item_active'));
+    event.deltaY < 0
+        ? changeSlider(indexActiveSlider === sliderItem.length - 1 ? 0
+            : indexActiveSlider + 1)
+        : changeSlider(indexActiveSlider === 0
+            ? sliderItem.length - 1 : indexActiveSlider - 1);
+});
+
+sliderPrev.addEventListener('click', () => {
+    const indexActiveSlider = sliderItem.findIndex(slider =>
+        slider.classList.contains('slider__item_active'));
+    changeSlider(indexActiveSlider === 0
+        ? sliderItem.length - 1 : indexActiveSlider - 1);
+});
+
+sliderNext.addEventListener('click', () => {
+    const indexActiveSlider = sliderItem.findIndex(slider =>
+        slider.classList.contains('slider__item_active'));
+    changeSlider(indexActiveSlider === sliderItem.length - 1
+        ? 0 : indexActiveSlider + 1);
+});
