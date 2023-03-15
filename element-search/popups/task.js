@@ -1,15 +1,17 @@
-let modalMain = document.getElementById('modal_main');
-let modalClose = Array.from(document.getElementsByClassName('modal__close'));
-let showSuccess = document.querySelector('.show-success');
-let modalSuccess = document.getElementById('modal_success');
+const modalMain = document.querySelector('#modal_main');
+const modalSuccess = document.querySelector('#modal_success');
+const showSuccess = document.querySelector('.show-success');
+const cross = document.querySelectorAll('.modal__close');
 
 modalMain.classList.add('modal_active');
 
-modalClose.forEach(item => item.onclick = function() {
-  modalMain.classList.remove('modal_active');
-    modalSuccess.classList.remove('modal_active');
+Array.from(cross).forEach((btn) => {
+    btn.onclick = () => {
+        btn.closest('.modal').classList.remove('modal_active');
+    }
 });
 
-showSuccess.onclick = function() {
-  modalSuccess.classList.add('modal_active');
-};
+showSuccess.onclick = () => {
+    modalMain.classList.remove('modal_active');
+    modalSuccess.classList.add("modal_active");
+}
