@@ -11,6 +11,14 @@ if (localStorage.getItem('user_id')) {
   formBtn.addEventListener('click', (e) => {
     e.preventDefault();
     const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      if (xhr.status != 200) { // анализируем HTTP-статус ответа, если статус не 200, то произошла ошибка
+        alert(`Ошибка ${xhr.status}: ${xhr.statusText}`); // Например, 404: Not Found
+      } else { // если всё прошло гладко, выводим результат
+        alert(`Готово, получили ${xhr.response.length} байт`); // response -- это ответ сервера
+      }
+    };
+
     xhr.addEventListener('readystatechange', () => {
       if (xhr.readyState === xhr.DONE) {
         const answer = JSON.parse(xhr.responseText);
@@ -25,11 +33,11 @@ if (localStorage.getItem('user_id')) {
           alert('Неверный логин/пароль');
         }
       }
-      
     });
-  
+
+
     const controlinput = [...document.querySelectorAll('.control')];
-  
+
     if (controlinput[0].value && controlinput[1].value) {
       const formData = new FormData();
       formData.append('login', controlinput[0].value);
@@ -39,6 +47,6 @@ if (localStorage.getItem('user_id')) {
     } else {
       alert('Вы не ввели логин или пароль');
     }
-  
+
   });
 }
